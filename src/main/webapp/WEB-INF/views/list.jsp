@@ -1,11 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> <%@ include file="layout/header.jsp" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
+<%@ include file="layout/header.jsp" %>
 
 <main class="container">
   <c:forEach var="board" items="${boards.content}">
     <div class="card col-md-12 m-2">
       <div class="card-body">
         <h4 class="card-title">${board.title}</h4>
-        <a href="#" class="btn btn-primary">상세보기</a>
+        <a href="/board/${board.id}" class="btn btn-primary">상세보기</a>
       </div>
     </div>
   </c:forEach>
