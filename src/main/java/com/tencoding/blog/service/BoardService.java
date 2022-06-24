@@ -29,15 +29,39 @@ public class BoardService {
 
 	@Transactional
 	public Board 글상세보기(int id) {
-		Board board = boardRepository.findById(id).orElseThrow(() -> {
-			return new RuntimeException("해당 글은 삭제 되었습니다.");
+		Board board = boardRepository.mFindById(id).orElseThrow(() -> {
+			return new RuntimeException("id 값이 잘못 들어왔어요");
 		});
-		System.out.println(board.getReadCount());
 		
 		// 더티체킹 = 조회 수 증가
 		board.setReadCount(board.getReadCount() + 1);
 		System.out.println(board.getReadCount());
 		return board;
 	}
+	
+	@Transactional
+	public void 글수정하기(int id, BoardSaveRequestDto dto) {
+		// 가져오기
+		Board boardEntity = boardRepository.findById(id).orElseThrow(() -> {
+			return new RuntimeException("해당 글은 없는 데이터입니다.");
+		});
+		
+		boardEntity.setTitle(dto.getTitle());
+		boardEntity.setContent(dto.getContent());
+		
+//		boardRepository.save(boardEntity); // 더티체킹 하지 않은 경우
+	
+		// 트랜잭션 처리 --> 글 수정하기() 메서드가 종료된느 시점에 더티 체킹 발생
+		
+	}
+	
+	@Transactional
+	public int 글삭제하기(int id) {
+//		boardRepository.deleteById(id);
+		
+		return boardRepository.mDeleteById(id);
+	}
+	
 
+	
 }

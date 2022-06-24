@@ -7,14 +7,18 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.tencoding.blog.dto.BoardSaveRequestDto;
 import com.tencoding.blog.model.Board;
+import com.tencoding.blog.repository.BoardRepository;
 import com.tencoding.blog.service.BoardService;
 
 @Controller
@@ -48,7 +52,6 @@ public class BoarderController {
 		return boards;
 	}
 	
-	
 	@GetMapping("/saveForm")
 	public String saveForm() {
 		
@@ -68,6 +71,31 @@ public class BoarderController {
 		// 서비스에 가서 데이터 가져오기
 		model.addAttribute("board", boardService.글상세보기(id));
 		return "detail";
+	}
+	
+	@GetMapping("/updateForm/{id}")
+	public String updateForm(@PathVariable int id, Model model) {
+		Board board = boardService.글상세보기(id);
+		model.addAttribute("board", board);
+		return "updateForm";
+	}
+	
+	
+	@PutMapping("/board/{id}")
+	// 스프링 기본 파싱 전략 key = value
+	// Json 형식으로 던져지므로 RequsetBody
+	@ResponseBody
+	public String updateBoard(@PathVariable int id, @RequestBody BoardSaveRequestDto dto) {
+		//(수정) 서비스, 더티체킹 = 영속성 이용
+		boardService.글수정하기(id, dto);
+		return "ok";
+	}
+	
+	@DeleteMapping("/board/{id}")
+	@ResponseBody
+	public Boolean deleteBoard(@PathVariable int id) {
+		boolean result = boardService.글삭제하기(id) == 1 ? true : false;
+		return result;
 	}
 	
 	

@@ -4,33 +4,34 @@
   <form>
     <div class="form-group">
       <label for="title">Title : </label>
-      <input type="text" placeholder="title" id="title" class="form-control" />
+      <input type="text" value="${board.title}"placeholder="title" id="title" class="form-control" />
     </div>
 
     <div class="form-group">
       <label for="content">Content : </label>
-      <textarea class="form-control summernote" rows="5" id="content"></textarea>
+      <textarea class="form-control summernote" rows="5" id="content">${board.content}</textarea>
     </div>
     <br />
-    <button type="button" onclick="saveBoard()" class="btn btn-primary">글쓰기</button>
+    <button type="button" onclick="updateBoard(${board.id})" class="btn btn-primary">글 수정하기</button>
   </form>
   <br />
 </div>
 <script>
-	function saveBoard() {
+	function updateBoard(id) {
+		
+		console.log("id : " + id);
+		
 		let title = document.querySelector("#title").value;
 		let content = document.querySelector("#content").value;
-		
-		console.log(title);
-		console.log(content);
 		
 		let board = {
 			title: title,
 			content: content
 		}
 		
-		fetch("/save", {
-			method: "post",
+		// fetch 비동기 통신을 사용하기 위해
+		fetch("/board/" + id, {
+			method: "put",
 			headers: {
 				'content-type': 'application/json; charset=utf-8'
 			},
@@ -39,10 +40,10 @@
 		.then(res => res.text())
 		.then(res => {
 			if(res == "ok") {
-				alert("글쓰기 성공");
+				alert("글수정 성공");
 				location.href = "/";
 			} else {
-				alert("글쓰기 실패");
+				alert("글수정 실패");
 			}	
 		});
 	
